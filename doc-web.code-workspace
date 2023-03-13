@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../doc-service"
+		}
+	],
+	"settings": {}
+}
