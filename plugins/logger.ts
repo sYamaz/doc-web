@@ -1,4 +1,4 @@
-export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal'
+type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal'
 
 export interface ILogger{
   debug(...obj: any[]): void
@@ -74,12 +74,16 @@ abstract class BasicLogger implements ILogger{
   abstract log(logLevel: LogLevel, ...obj:any[]): void
 }
 
-export class ConsoleLogger extends BasicLogger{
+class ConsoleLogger extends BasicLogger{
   constructor(logLevel: LogLevel) {
     super(logLevel)
   }
 
   log(logLevel: LogLevel, ...obj: any[]): void {
+    // 
+    // productionではログ出力しないなど
+    // 
+
     switch(logLevel){
       case "fatal":
         console.error(logLevel, obj)
