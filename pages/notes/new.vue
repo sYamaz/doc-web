@@ -7,6 +7,11 @@
     :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady" />
 </template>
 <script setup lang="ts">
+// composables
+const {saveDoc} = useTokenlessApi()
+// provide
+const {$logger} = useNuxtApp()
+
 const title = ref('')
 const code = ref('')
 const extensions = [markdown(), oneDark]
@@ -29,19 +34,13 @@ const handleReady = (payload: any) => {
 //   // return ...
 // }
 
-const save = (arg: any) => {
-  // postObj
-  const obj = {
-    title: title.value,
-    body: code.value
+const save = async (arg: any) => {
+  try{
+    const newDocId = await saveDoc(title.value, code.value)
+  }catch(e){
+    const err = e as Error
+    $logger.error(err)
   }
-
-  fetch('http://localhost:8888/docs', {
-    method: 'POST',
-    mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(obj)
-  })
 }
 
 </script>
@@ -49,7 +48,7 @@ const save = (arg: any) => {
 import { Codemirror } from 'vue-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { oneDark } from '@codemirror/theme-one-dark'
-import { stringLiteral } from '@babel/types';
+
 definePageMeta({
   layout: 'main'
 })
