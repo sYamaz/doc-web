@@ -25,7 +25,7 @@ const signUp = (baseURL: string) => async (id: string, pass:string) => {
     method: 'POST',
     mode: 'cors',
     headers: {
-      'Conetnt-Type':'application/json'
+      'Content-Type':'application/json'
     },
     body: JSON.stringify(body)
   })
