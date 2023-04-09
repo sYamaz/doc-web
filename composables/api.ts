@@ -5,7 +5,9 @@ type TokenState = {
 
 const CONTENTTYPE_JSON = 'application/json'
 const METHOD_POST = 'POST'
+const METHOD_PUT = 'PUT'
 const METHOD_GET = 'GET'
+const METHOD_DELETE = 'DELETE'
 const AUTHORIZATION_PREFIX = 'Bearer '
 const MODE_CORS = 'cors'
 
@@ -20,7 +22,10 @@ export const useTokenlessApi = () => {
     signUp: signUp(baseURL),
     signIn: signIn(state, baseURL),
     saveDoc: saveDoc(getToken, baseURL),
-    listDoc: listDoc(getToken, baseURL)
+    listDoc: listDoc(getToken, baseURL),
+    getDoc: getDoc(getToken, baseURL),
+    updateDoc: updateDoc(getToken, baseURL),
+    deleteDoc: deleteDoc(getToken, baseURL)
   }
 }
 
@@ -107,6 +112,27 @@ const saveDoc = (tokenGetter: () => string, baseURL: string) => async (title: st
   return responseBody.document_id
 }
 
+const updateDoc = (tokenGetter: () => string, baseURL: string) => async (document_id: string, title: string, body: string) => {
+  const obj = {
+    title,
+    body
+  }
+
+  const response = await fetch(baseURL + '/user/docs/' + document_id, {
+    method: METHOD_PUT,
+    mode: MODE_CORS,
+    headers: { 
+      'Content-Type': CONTENTTYPE_JSON ,
+      'Authorization': AUTHORIZATION_PREFIX+tokenGetter()
+    },
+    body: JSON.stringify(obj)
+  })
+
+  if (response.status !== 200) {
+    throw Error(response.statusText)
+  }
+}
+
 const listDoc = (tokenGetter: () => string, baseURL: string) => async () => {
   const response = await fetch(baseURL + '/user/docs', {
     method: METHOD_GET,
@@ -128,4 +154,39 @@ const listDoc = (tokenGetter: () => string, baseURL: string) => async () => {
   const resBody = await response.json()
   const responseBody = resBody as ResponseBody
   return responseBody.documents
+}
+
+const getDoc = (tokenGetter: () => string, baseURL: string) => async (document_id:string) => {
+  const response = await fetch(baseURL + '/user/docs/' + document_id, {
+    method: METHOD_GET,
+    mode: MODE_CORS,
+    headers: {
+      'Authorization': AUTHORIZATION_PREFIX+tokenGetter()
+    }
+  })
+  if (response.status !== 200){
+    throw Error(response.statusText)
+  }
+
+  type ResponseBody = {
+    document_id: string
+    title: string
+    body: string
+  }
+  const resBody = await response.json()
+  const responseBody = resBody as ResponseBody
+  return responseBody
+}
+
+const deleteDoc = (tokenGetter: () => string, baseURL: string) => async (document_id: string) => {
+  const response = await fetch(baseURL + '/user/docs/' + document_id, {
+    method: METHOD_DELETE,
+    mode: MODE_CORS,
+    headers: {
+      'Authorization': AUTHORIZATION_PREFIX+tokenGetter()
+    }
+  })
+  if (response.status !== 200){
+    throw Error(response.statusText)
+  }
 }
