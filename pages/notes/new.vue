@@ -1,9 +1,11 @@
 <template>
-  <v-row no-gutters>
+  <v-container class="ma-0 pa-0 d-flex flex-column" style="height:100%;" fluid>
+  <v-row class="flex-grow-0" no-gutters>
     <v-text-field label="title" v-model="title" class="mx-2" density="compact"></v-text-field>
     <v-btn class="ml-auto" @click="save">Save</v-btn>
   </v-row>
-  <editor :modelValue="code" @update:model-value="onUpdated"></editor>
+  <editor class="flex-grow-1" :modelValue="code" @update:model-value="onUpdated"></editor>
+</v-container>
 </template>
 <script setup lang="ts">
 // composables

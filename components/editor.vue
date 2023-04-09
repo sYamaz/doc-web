@@ -1,13 +1,13 @@
 <template>
-  <v-container fluid style="height:100%; flex-direction: column;" class="pa-0 d-flex">
+  <v-container id="editor_component" fluid style="flex-direction: column;" class="pa-0 d-flex">
     <v-row style="flex: 1;" no-gutters>
       <v-col cols="6" style="">
-        <codemirror class="md-editor" v-model="code" placeholder="Code goes hear..."
+        <codemirror class="md_editor" style="height:100%;" v-model="code" placeholder="Code goes hear..."
           :style="{ backgroundColor: 'gray' }" :autofocus="true" :indent-with-tab="true" :tab-size="2"
           :extensions="extensions" @ready="handleReady" @change="onChanged" />
       </v-col>
       <v-col>
-        <div class="markdown md-preview" v-html="md"></div>
+        <div class="markdown md_preview" v-html="md"></div>
       </v-col>
     </v-row>
   </v-container>
@@ -60,12 +60,12 @@ import { Renderer, marked } from 'marked'
 import { ViewUpdate } from '@codemirror/view';
 </script>
 <style lang="scss" scoped>
-$utilities: false;
-.md-editor {
-  height: 100%;
+
+.md_editor {
+  
 }
 
-.md-preview {
+.md_preview {
   height: 100%;
 }
 </style>
