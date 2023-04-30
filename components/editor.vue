@@ -1,41 +1,22 @@
 <template>
-  <v-container id="editor_component" fluid style="flex-direction: column;" class="pa-0 d-flex">
-    <v-row style="flex: 1;" no-gutters>
-      <v-col cols="6" style="">
-        <codemirror class="md_editor" style="height:100%;" v-model="code" placeholder="Code goes hear..."
-          :style="{ backgroundColor: 'gray' }" :autofocus="true" :indent-with-tab="true" :tab-size="2"
-          :extensions="extensions" @ready="handleReady" @change="onChanged" />
-      </v-col>
-      <v-col>
-        <div class="markdown md_preview" v-html="md"></div>
-      </v-col>
-    </v-row>
-  </v-container>
+  <codemirror class="md_editor" style="height:100%;" :model-value="props.modelValue" placeholder="Code goes hear..."
+    :style="{ backgroundColor: 'gray' }" :autofocus="true" :indent-with-tab="true" :tab-size="2" :extensions="extensions"
+    @ready="handleReady" @change="onChanged" />
 </template>
-<script lang="ts" setup>
-interface Props{
-  modelValue:string
-}
-const props = defineProps<Props>()
-const emits = defineEmits<{(e: 'update:modelValue', value?: string):void}>()
-
-// provide
-const {$logger} = useNuxtApp()
-
-const md = ref(marked.parse(props.modelValue))
-
-const code = ref(props.modelValue)
+<script setup lang="ts">
 const extensions = [markdown(), oneDark]
-
-// codemirror editorView instance ref
 const view = shallowRef()
 const handleReady = (payload: any) => {
   view.value = payload.vue
 }
 
-// code changed
-const onChanged = (value:string, viewUpdate:ViewUpdate) => {
-  md.value = marked.parse(value)
+type Props = {
+  modelValue: string
+}
+const props = defineProps<Props>()
+
+const emits = defineEmits<{ (e: 'update:modelValue', value?: string): void }>()
+const onChanged = (value: string, viewUpdate: ViewUpdate) => {
   emits('update:modelValue', value)
 }
 
@@ -51,21 +32,13 @@ const onChanged = (value:string, viewUpdate:ViewUpdate) => {
 //   // return ...
 // }
 
+
+
 </script>
 <script lang="ts">
 import { Codemirror } from 'vue-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { oneDark } from '@codemirror/theme-one-dark'
-import { Renderer, marked } from 'marked'
 import { ViewUpdate } from '@codemirror/view';
+import { Layout } from '~~/components/markdowneditor.vue';
 </script>
-<style lang="scss" scoped>
-
-.md_editor {
-  
-}
-
-.md_preview {
-  height: 100%;
-}
-</style>

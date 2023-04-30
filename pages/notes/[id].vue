@@ -1,19 +1,24 @@
 <template>
   <v-container id="edit_container" class="pa-0 ma-0 d-flex flex-column" style="height:100%;" fluid>
     <v-row class="flex-grow-0" no-gutters>
-      <h1>{{ title }}</h1>
-      <v-btn @click="onSaved">save</v-btn>
-      <v-btn to="/notes">close</v-btn>
+      <v-text-field class="me-auto" v-model="title"></v-text-field>
+      <layout-switch v-model="layout"></layout-switch>
+      <save-btn @click="onSaved"></save-btn>
+      <close-btn to="/notes"></close-btn>
     </v-row>
-    <editor class="flex-grow-1" :modelValue="code" @update:modelValue="onUpdated"></editor>
+    <markdowneditor :layout="layout" class="flex-grow-1" :modelValue="code" @update:modelValue="onUpdated"></markdowneditor>
   </v-container>
 </template>
 <script setup lang="ts">
 // composable
+
+import { Layout } from '~~/components/markdowneditor.vue';
 const { getDoc, updateDoc } = useTokenlessApi()
 const route = useRoute()
 // provide
 const { $logger } = useNuxtApp()
+
+const layout:Ref<Layout> = ref('side-by-side')
 
 // urlからdocument_id取得
 const document_id = route.params.id as string
